@@ -30,7 +30,14 @@ public class AuthorizationController {
     }
 
     @PostMapping("/sign-up")
-    public String createUserAccount(@ModelAttribute User user) {
+    public String createUserAccount(@ModelAttribute("user") User user) {
+
+        String login = user.getLogin();
+        String password = user.getPassword();
+
+        System.out.println(login);
+        System.out.println(password);
+
         String encodedPassword = BCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userService.save(user);
