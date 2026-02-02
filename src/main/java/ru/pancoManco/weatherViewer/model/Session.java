@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "sessions")
+@Table(name = "sessions",schema = "weather")
 public class Session {
 
     @Id

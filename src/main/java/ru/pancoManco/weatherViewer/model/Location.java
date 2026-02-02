@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "locations")
+@Table(name = "locations",schema = "weather")
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
