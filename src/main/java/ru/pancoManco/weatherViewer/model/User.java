@@ -22,4 +22,7 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    public User(String name, String password) {
+    }
 }

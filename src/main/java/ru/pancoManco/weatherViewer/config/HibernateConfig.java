@@ -33,10 +33,12 @@ public class HibernateConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(dataSource);
+        entityManagerFactory.setEntityManagerFactoryInterface(EntityManagerFactory.class);
         entityManagerFactory.setPackagesToScan("ru.pancoManco.weatherViewer.model");
         entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         entityManagerFactory.setJpaProperties(getHibernateProperties());
         entityManagerFactory.setPersistenceProviderClass(HibernatePersistenceProvider.class);
+        System.out.println(entityManagerFactory.getPersistenceUnitName());
         return entityManagerFactory;
     }
 
