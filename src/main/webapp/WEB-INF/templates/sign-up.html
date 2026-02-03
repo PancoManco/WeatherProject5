@@ -27,9 +27,11 @@
                     <input type="text"
                            class="form-control"
                            id="username"
-                           th:field="*{login}"
+                           th:field="*{username}"
                            required/>
                 </div>
+                <p th:errors = "*{username}" class="text-danger"
+                   th:if="${#fields.hasErrors('username')}"></p>
 
 
                 <div class="mb-3">
@@ -40,7 +42,8 @@
                             th:field="*{password}"
                            required/>
                 </div>
-
+                <p th:errors = "*{password}" class="text-danger"
+                   th:if="${#fields.hasErrors('password')}"></p>
 
                 <div class="mb-3">
                     <label for="repeatPassword" class="form-label">Repeat password</label>
@@ -49,7 +52,8 @@
                            id="repeatPassword"
                            required/>
                 </div>
-
+                <p th:errors = "*{repeatPassword}" class="text-danger"
+                   th:if="${#fields.hasErrors('repeatPassword')}"></p>
 
                 <button type="submit" class="btn btn-primary w-100 mt-3">Sign Up</button>
 
