@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.pancoManco.weatherViewer.dto.UserRegisterDto;
 import ru.pancoManco.weatherViewer.dto.UserSignInDto;
+import ru.pancoManco.weatherViewer.model.Session;
 import ru.pancoManco.weatherViewer.service.UserService;
+
+import java.util.UUID;
 
 @Controller
 public class AuthorizationController {
@@ -49,15 +52,23 @@ public class AuthorizationController {
     }
 
     @PostMapping("/sign-in")
-    public String signIn(@Valid @ModelAttribute("user") UserSignInDto userSignInDto, Model model, HttpSession session) {
+    public String signIn(@Valid @ModelAttribute("user") UserSignInDto userSignInDto,
+                         Model model,
+                         BindingResult bindingResult,
+                         HttpSession session) {
 
+
+        if (bindingResult.hasErrors()) {
+            return "sign-in";
+        }
         boolean authenticated = userService.authenticate(userSignInDto.getUsername(), userSignInDto.getPassword());
+
         if (!authenticated) {
             model.addAttribute("error", "Invalid username or password!");
             return "sign-in";
         }
         session.setAttribute("username", userSignInDto.getUsername());
-        model.addAttribute("user", userSignInDto);
+     //   model.addAttribute("user", userSignInDto);
         return "redirect:/index";
     }
 

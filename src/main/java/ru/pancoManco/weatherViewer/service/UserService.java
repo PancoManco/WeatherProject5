@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pancoManco.weatherViewer.dto.UserRegisterDto;
+import ru.pancoManco.weatherViewer.exception.UserAlreadyExist;
 import ru.pancoManco.weatherViewer.mapper.UserMapper;
 import ru.pancoManco.weatherViewer.model.User;
 import ru.pancoManco.weatherViewer.repository.UserRepository;
@@ -29,7 +30,7 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         if (userRepository.findByUsername(user.getLogin()) != null) {
-            throw new RuntimeException("User already exists");
+            throw new UserAlreadyExist("User already exist");
         }
         userRepository.save(user);
     }
