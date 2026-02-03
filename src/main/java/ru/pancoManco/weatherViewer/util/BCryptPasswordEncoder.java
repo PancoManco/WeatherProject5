@@ -1,11 +1,10 @@
 package ru.pancoManco.weatherViewer.util;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.stereotype.Component;
 
-
-public final class BCryptPasswordEncoder {
-    private BCryptPasswordEncoder() {
-    }
+@Component
+public class BCryptPasswordEncoder {
 
     public static String encode(String rawPassword) {
             return BCrypt.hashpw(rawPassword, BCrypt.gensalt());

@@ -1,29 +1,32 @@
 package ru.pancoManco.weatherViewer.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.pancoManco.weatherViewer.dto.UserRegisterDto;
+import ru.pancoManco.weatherViewer.mapper.UserMapper;
 import ru.pancoManco.weatherViewer.model.User;
 import ru.pancoManco.weatherViewer.repository.UserRepository;
 import ru.pancoManco.weatherViewer.util.BCryptPasswordEncoder;
 
 @Service
 @Transactional
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserMapper userMapper;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
-    public void register(User user) {
+    public void register(UserRegisterDto userRegisterDto) {
+        User user = userMapper.toEntity(userRegisterDto);
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         if (userRepository.findByUsername(user.getLogin()) != null) {
             throw new RuntimeException("User already exists");
         }
-        String encodedPassword = BCryptPasswordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
         userRepository.save(user);
     }
     public boolean authenticate(String login,String rawPassword) {
