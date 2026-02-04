@@ -1,11 +1,14 @@
 package ru.pancoManco.weatherViewer.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import ru.pancoManco.weatherViewer.interceptor.AuthInterceptor;
 
 @Configuration
 @ComponentScan
@@ -14,16 +17,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan(basePackages = "ru.pancoManco.weatherViewer")
 public class WebMvcConfig implements WebMvcConfigurer {
 
-//    private final AuthInterceptor authInterceptor;
-//
-//    @Autowired
-//    public WebMvcConfig(AuthInterceptor authInterceptor) {
-//        this.authInterceptor = authInterceptor;
-//    }
-//
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(authInterceptor).excludePathPatterns("/sign-in", "/sign-up","/css/**");
-//    }
+    private final AuthInterceptor authInterceptor;
+
+    @Autowired
+    public WebMvcConfig(AuthInterceptor authInterceptor) {
+        this.authInterceptor = authInterceptor;
+    }
+
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authInterceptor).excludePathPatterns("/sign-in", "/sign-up","/css/**");
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

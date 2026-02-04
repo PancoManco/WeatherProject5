@@ -1,6 +1,6 @@
 package ru.pancoManco.weatherViewer.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pancoManco.weatherViewer.dto.UserRegisterDto;
@@ -8,22 +8,23 @@ import ru.pancoManco.weatherViewer.exception.UserAlreadyExist;
 import ru.pancoManco.weatherViewer.mapper.UserMapper;
 import ru.pancoManco.weatherViewer.model.User;
 import ru.pancoManco.weatherViewer.repository.UserRepository;
-import ru.pancoManco.weatherViewer.util.PasswordEncoder;
+import ru.pancoManco.weatherViewer.util.PasswordEncoderUtil;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoderUtil passwordEncoder;
     private final UserMapper userMapper;
 
-    @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper;
-    }
+//    @Autowired
+//    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+//        this.userRepository = userRepository;
+//        this.passwordEncoder = passwordEncoder;
+//        this.userMapper = userMapper;
+//    }
 
     public void register(UserRegisterDto userRegisterDto) {
         User user = userMapper.toEntity(userRegisterDto);

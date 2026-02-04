@@ -17,10 +17,18 @@
 
     <h2 class="text-center mb-5">Sign Up</h2>
 
+    <div class="row justify-content-center" th:if="${passwordMismatch}">
+        <div class="col-12 col-lg-4 col-md-6 col-sm-12">
+            <div class="alert alert-danger" role="alert">
+                    Пароли не совпадают
+            </div>
+        </div>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
 
-            <form th:action="@{/sign-up}" method="post" th:object="${user}">
+            <form th:action="@{/sign-up}" method="post" th:object="${newUser}">
 
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
@@ -29,10 +37,8 @@
                            id="username"
                            th:field="*{username}"
                            required/>
+                    <span style="color: red;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Ошибка!</span>
                 </div>
-                <p th:errors = "*{username}" class="text-danger"
-                   th:if="${#fields.hasErrors('username')}"></p>
-
 
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
@@ -41,19 +47,19 @@
                            id="password"
                             th:field="*{password}"
                            required/>
+                    <span style="color: red;" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Ошибка!</span>
                 </div>
-                <p th:errors = "*{password}" class="text-danger"
-                   th:if="${#fields.hasErrors('password')}"></p>
+
 
                 <div class="mb-3">
                     <label for="repeatPassword" class="form-label">Repeat password</label>
                     <input type="password"
                            class="form-control"
                            id="repeatPassword"
-                           required/>
+                           th:field="*{repeatPassword}"
+                           required />
+
                 </div>
-                <p th:errors = "*{repeatPassword}" class="text-danger"
-                   th:if="${#fields.hasErrors('repeatPassword')}"></p>
 
                 <button type="submit" class="btn btn-primary w-100 mt-3">Sign Up</button>
 

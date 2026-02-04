@@ -19,14 +19,25 @@
 
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
-            <form th:action="@{/sign-in}" method="post" class="mt-4" th:object="${user}">
+            <form th:action="@{/sign-in}" method="post" class="mt-4" th:object="${newUser}">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" required th:field="*{username}"/>
+                    <input type="text"
+                           class="form-control"
+                           id="username"
+                           name="username"
+                           required th:field="*{username}"/>
+                    <span style="color: red;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Ошибка!</span>
                 </div>
+
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required th:field="*{password}"/>
+                    <input type="password"
+                           class="form-control"
+                           id="password"
+                           name="password"
+                           required th:field="*{password}"/>
+                    <span style="color: red;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Ошибка!</span>
                 </div>
 
                 <input type="hidden" name="redirect_to" value="http://localhost/"/>

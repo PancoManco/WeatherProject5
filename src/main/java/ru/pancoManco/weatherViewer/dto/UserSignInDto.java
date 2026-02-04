@@ -14,10 +14,10 @@ import lombok.Setter;
 public class UserSignInDto {
 
     @NotBlank
-    @Size(min = 3, max = 20)
+    @Size(min = 3, max = 20, message = "Логин от 3 до 20 символов")
     private String username;
 
     @NotBlank
-    @Size(min = 3, max = 20)
+    @Size(min = 3, max = 20, message = "Пароль от 3 до 20 символов")
     private String password;
 }

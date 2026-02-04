@@ -7,11 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.pancoManco.weatherViewer.annotation.PasswordMatch;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@PasswordMatch
 public class UserRegisterDto {
 
     @NotBlank
@@ -26,5 +28,5 @@ public class UserRegisterDto {
 
     @NotBlank
     @Size(min = 3, max=20, message = "Пароль длиной от 3 символов")
-    private String repeatPassword;
+    private String  repeatPassword;
 }
