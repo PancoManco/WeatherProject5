@@ -27,7 +27,6 @@
                            id="username"
                            name="username"
                            required th:field="*{username}"/>
-                    <span style="color: red;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Ошибка!</span>
                 </div>
 
                 <div class="mb-3">
@@ -37,13 +36,12 @@
                            id="password"
                            name="password"
                            required th:field="*{password}"/>
-                    <span style="color: red;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Ошибка!</span>
                 </div>
 
                 <input type="hidden" name="redirect_to" value="http://localhost/"/>
 
                 <button type="submit" class="btn btn-primary w-100 mt-3">Sign In</button>
-                <p class="mt-2 text-center">Don't have an account? <a href="#" th:href="@{/sign-up}">Sign up here</a></p>
+                <p class="mt-2 text-center">Don't have an account? <a th:href="@{/sign-up}">Sign up here</a></p>
             </form>
         </div>
     </div>

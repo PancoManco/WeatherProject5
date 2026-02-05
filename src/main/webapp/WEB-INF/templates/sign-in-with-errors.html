@@ -14,39 +14,41 @@
             <div class="weather-logo"></div>
         </div>
     </div>
-
     <h2 class="text-center mb-5">Sign In</h2>
-
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" th:if="${InvalidUsernameOrPassword}">
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
             <div class="alert alert-danger" role="alert">
-                Invalid username or password.
+                Неверный логин или пароль!
             </div>
         </div>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
-            <form action="#" class="mt-4">
+            <form th:action="@{/sign-in}" method="post" class="mt-4" th:object="${newUser}">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-
-                    <div class="input-group has-validation">
-                        <input type="text" class="form-control is-invalid" id="username" name="username" required value=""/>
-                        <div class="invalid-feedback">
-                            Invalid email.
-                        </div>
-                    </div>
+                    <input type="text"
+                           class="form-control"
+                           id="username"
+                           name="username"
+                           required th:field="*{username}"/>
+                    <span style="color: red;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Ошибка!</span>
                 </div>
+
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required value=""/>
+                    <input type="password"
+                           class="form-control"
+                           id="password"
+                           name="password"
+                           required th:field="*{password}"/>
+                    <span style="color: red;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Ошибка!</span>
                 </div>
-
                 <input type="hidden" name="redirect_to" value="http://localhost/"/>
 
                 <button type="submit" class="btn btn-primary w-100 mt-3">Sign In</button>
-                <p class="mt-2 text-center">Don't have an account? <a href="#">Sign up here</a></p>
+                <p class="mt-2 text-center">Don't have an account? <a th:href="@{/sign-up}">Sign up here</a></p>
             </form>
         </div>
     </div>

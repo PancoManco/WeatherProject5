@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.pancoManco.weatherViewer.dto.UserRegisterDto;
 import ru.pancoManco.weatherViewer.dto.UserSignInDto;
+import ru.pancoManco.weatherViewer.exception.UserAlreadyExist;
 import ru.pancoManco.weatherViewer.service.UserService;
 
 @Controller
@@ -33,17 +33,18 @@ public class AuthorizationController {
     public String createUserAccount(@ModelAttribute("newUser") @Valid  UserRegisterDto userRegisterDto,
                                     BindingResult bindingResult,
                                     Model model) {
-
         if (bindingResult.hasErrors()) {
-            for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                if (fieldError.getField().equals("repeatPassword")) {
-                    model.addAttribute("passwordMismatch", true);
-                }
-            }
-            return "sign-up";
+            return "sign-up-with-errors";
         }
-        userService.register(userRegisterDto);
-        return "redirect:/sign-in";
+        try {
+            userService.register(userRegisterDto);
+            return "redirect:/sign-in";
+        }
+        catch (UserAlreadyExist e) {
+            model.addAttribute("userAlreadyExist", true);
+            return "sign-up-with-errors";
+        }
+
     }
 
     // ===== LOGIN =====
@@ -58,18 +59,15 @@ public class AuthorizationController {
                          BindingResult bindingResult,
                          Model model,
                          HttpSession session) {
-
         if (bindingResult.hasErrors()) {
-            return "sign-in";
+            return "sign-in-with-errors";
         }
         boolean authenticated = userService.authenticate(userSignInDto.getUsername(), userSignInDto.getPassword());
-
         if (!authenticated) {
-            model.addAttribute("error", "Invalid username or password!");
-            return "sign-in";
+            model.addAttribute("InvalidUsernameOrPassword", true);
+            return "sign-in-with-errors";
         }
         session.setAttribute("username", userSignInDto.getUsername());
-     //   model.addAttribute("user", userSignInDto);
         return "redirect:/index";
     }
 

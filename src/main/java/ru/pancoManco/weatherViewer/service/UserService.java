@@ -19,12 +19,6 @@ public class UserService {
     private final PasswordEncoderUtil passwordEncoder;
     private final UserMapper userMapper;
 
-//    @Autowired
-//    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
-//        this.userRepository = userRepository;
-//        this.passwordEncoder = passwordEncoder;
-//        this.userMapper = userMapper;
-//    }
 
     public void register(UserRegisterDto userRegisterDto) {
         User user = userMapper.toEntity(userRegisterDto);
