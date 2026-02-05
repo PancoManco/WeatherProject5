@@ -19,15 +19,16 @@ public class UserRepository {
         em.persist(user);
     }
 
-    public User findByUsername(String login) {
+    public Optional<User> findByUsername(String login) {
         try {
-            return em.createQuery(
+            User user = em.createQuery(
                             "SELECT u FROM User u WHERE u.login = :login",
                             User.class
                     ).setParameter("login", login)
                     .getSingleResult();
+            return Optional.of(user);
         } catch (NoResultException e) {
-            return null;
+            return Optional.empty();
         }
     }
 }
