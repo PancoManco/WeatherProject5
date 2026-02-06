@@ -1,26 +1,44 @@
 package ru.pancoManco.weatherViewer.interceptor;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import ru.pancoManco.weatherViewer.model.Session;
+import ru.pancoManco.weatherViewer.service.SessionService;
+import ru.pancoManco.weatherViewer.util.WebUtils;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor
 public class AuthInterceptor implements HandlerInterceptor {
+
+    private final SessionService sessionService;
 
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
                              Object handler) throws Exception {
 
-        HttpSession session = request.getSession(false);
         String uri = request.getRequestURI();
         if (uri.equals("/sign-in") || uri.equals("/sign-up")) {
             return true;
         }
-        if (session != null && session.getAttribute("username") != null) {
-            return true;
+        Cookie cookie = WebUtils.findCookie(request, "SESSION_ID");
+        if (cookie != null) {
+            String sessionId = cookie.getValue();
+            Optional<Session> sessionOpt = sessionService.getSessionById(UUID.fromString(sessionId));
+
+            if (sessionOpt.isPresent()) {
+                Session currentSession = sessionOpt.get();
+                // ?????? request what an atribute
+                request.setAttribute("currentSession", currentSession);
+                return true;
+            }
         }
         response.sendRedirect("/sign-in");
         return false;

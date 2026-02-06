@@ -13,6 +13,7 @@ import ru.pancoManco.weatherViewer.repository.UserRepository;
 import ru.pancoManco.weatherViewer.util.PasswordEncoderUtil;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final SessionService sessionService;
     private final PasswordEncoderUtil passwordEncoder;
     private final UserMapper userMapper;
 
@@ -34,7 +36,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean authenticate(UserSignInDto userSignInDto)  {
+    public UUID authenticate(UserSignInDto userSignInDto)  {
         String username = userSignInDto.getUsername();
         String password = userSignInDto.getPassword();
         Optional<User> opt = userRepository.findByUsername(username);
@@ -45,17 +47,8 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new WrongCredentialsException();
         }
-
-//        if (opt.isPresent()) {
-//            User user = opt.get();
-//            if (!passwordEncoder.matches(password, user.getPassword())) {
-//                throw new WrongCredentialsException();
-//            }
-//            return true;
-//        }
-
-        return true;
-
+        System.out.println("Authenticated user UUUUUUUUUUSSSSSSSSSSSEEEEEEEEEEEERRRR: " + username);
+        return sessionService.createNewSession(user);
     }
 
 }
