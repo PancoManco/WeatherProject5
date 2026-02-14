@@ -19,8 +19,8 @@ public class SearchController {
     private final OpenWeatherService openWeatherService;
 
     @GetMapping
-    public String search(@RequestParam String query, Model model) {
-        List<OpenWeatherGeoResponseDto> locations = openWeatherService.getGeoByCityName(query);
+    public String search(@RequestParam("location") String location, Model model) {
+        List<OpenWeatherGeoResponseDto> locations = openWeatherService.getGeoByCityName(location);
         model.addAttribute("locations", locations);
         return "search-result";
     }

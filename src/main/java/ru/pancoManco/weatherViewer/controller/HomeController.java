@@ -31,7 +31,7 @@ public class HomeController {
         return "redirect:/";
    }
 
-   @PostMapping("/delete")
+   @PostMapping("location/delete")
     public String updateLocation(@ModelAttribute("location")LocationRequestDto locationRequestDto) {
         locationService.deleteLocation(locationRequestDto);
         return "redirect:/";

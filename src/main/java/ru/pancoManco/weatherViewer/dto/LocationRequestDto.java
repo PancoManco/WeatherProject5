@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LocationRequestDto {
+    private Long id;
     private String cityName;
     private BigDecimal latitude;
     private BigDecimal longitude;

@@ -50,12 +50,12 @@ public class OpenWeatherService {
                 .queryParam("appid",apiKey)
                 .toUriString();
         String JsonResponse = restTemplate.getForObject(url, String.class);
-
         try {
-            return objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false)
-                    .readValue(JsonResponse, OpenWeatherCityResponseDto.class);
+            OpenWeatherCityResponseDto openWeatherGeoResponseDto = objectMapper.readValue(JsonResponse,OpenWeatherCityResponseDto.class);
+            openWeatherGeoResponseDto.setCity(city);
+            return openWeatherGeoResponseDto;
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Ошибка десериализации",e);
         }
     }
 

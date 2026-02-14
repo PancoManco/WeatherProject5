@@ -17,7 +17,8 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(name = "name", unique = true, nullable = false)
+
+    @Column(name = "name")
     private String name;
 
     @ManyToOne

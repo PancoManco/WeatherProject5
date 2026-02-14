@@ -47,7 +47,6 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new WrongCredentialsException();
         }
-        System.out.println("Authenticated user UUUUUUUUUUSSSSSSSSSSSEEEEEEEEEEEERRRR: " + username);
         return sessionService.createNewSession(user);
     }
 

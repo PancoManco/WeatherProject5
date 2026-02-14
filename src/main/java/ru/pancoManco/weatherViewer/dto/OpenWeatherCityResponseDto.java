@@ -17,7 +17,7 @@ import java.util.Optional;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenWeatherCityResponseDto {
 
-
+        private Long id;
         private BigDecimal longitude;
         private BigDecimal latitude;
 
