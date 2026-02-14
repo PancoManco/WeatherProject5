@@ -25,7 +25,7 @@ public class OpenWeatherCityResponseDto {
         private String icon;
 
         private double temperature;
-        private double fellsLikeTemperature;
+        private double feelsLikeTemperature;
 
         private int humidity;
 
@@ -37,9 +37,9 @@ public class OpenWeatherCityResponseDto {
     private void unpackCoordinates(JsonNode node) {
         try {
             Optional.ofNullable(node.get("lon"))
-                    .ifPresent(n -> longitude = BigDecimal.valueOf(n.asDouble()));
+                    .ifPresent(n -> longitude = new BigDecimal(n.asText()));
             Optional.ofNullable(node.get("lat"))
-                    .ifPresent(n -> latitude = BigDecimal.valueOf(n.asDouble()));
+                    .ifPresent(n -> latitude = new BigDecimal(n.asText()));
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("Ошибка при разборе координат", e);
         }
@@ -60,7 +60,7 @@ public class OpenWeatherCityResponseDto {
         Optional.ofNullable(node.get("temp"))
                 .ifPresent(n -> temperature = n.asDouble());
         Optional.ofNullable(node.get("feels_like"))
-                .ifPresent(n -> fellsLikeTemperature = n.asDouble());
+                .ifPresent(n -> feelsLikeTemperature = n.asDouble());
         Optional.ofNullable(node.get("humidity"))
                 .ifPresent(n -> humidity = n.asInt());
     }

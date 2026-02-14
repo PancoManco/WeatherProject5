@@ -17,16 +17,24 @@ import ru.pancoManco.weatherViewer.annotation.PasswordMatch;
 public class UserRegisterDto {
 
     @NotBlank
-    @Size(min = 3, max = 10, message = "Имя пользователя должно быть от 3 до 10 символов.")
+    @Size(min = 3, max = 10,
+            message = "Username must be between 3 and 10 characters.")
+    @Pattern(
+            regexp = "^[A-Za-z0-9_]+$",
+            message = "Username can contain only letters, digits and underscore."
+    )
     private String username;
 
     @NotBlank
-    @Size(min = 3, max=20, message = "Пароль длиной от 3 символов")
-    @Pattern(regexp = "^(?=.*\\d)(?=.*[A-Za-z]).*$",
-            message = "Пароль должен содержать хотя бы одну цифру и одну букву.")
+    @Size(min = 3, max = 20,
+            message = "Password must be at least 3 characters long.")
+    @Pattern(
+            regexp = "^(?=.*\\d)(?=.*[A-Za-z]).*$",
+            message = "Password must contain at least one letter and one digit."
+    )
     private String password;
 
     @NotBlank
-    @Size(min = 3, max=20, message = "Пароль длиной от 3 символов")
+    @Size(min = 3, max=20, message = "Password must be at least 3 characters long.")
     private String  repeatPassword;
 }

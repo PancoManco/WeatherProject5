@@ -7,35 +7,31 @@ import ru.pancoManco.weatherViewer.context.UserContextHolder;
 import ru.pancoManco.weatherViewer.dto.LocationRequestDto;
 import ru.pancoManco.weatherViewer.dto.OpenWeatherCityResponseDto;
 import ru.pancoManco.weatherViewer.model.Location;
-import ru.pancoManco.weatherViewer.model.Session;
 import ru.pancoManco.weatherViewer.model.User;
 import ru.pancoManco.weatherViewer.repository.LocationRepository;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class LocationService {
     private final LocationRepository locationRepository;
     private final OpenWeatherService openWeatherService;
-    private final SessionService sessionService;
 
-    public List<OpenWeatherCityResponseDto> getAllLocationForUser() {
+    public List<OpenWeatherCityResponseDto> getAllLocationForUserAsDto() {
         User user = UserContextHolder.get();
         List<Location> locations = locationRepository.getAllUserLocations(user);
         List<OpenWeatherCityResponseDto> result = new ArrayList<>();
         for (Location location : locations) {
-
             OpenWeatherCityResponseDto dto =
                     openWeatherService.getWeatherByCoordinates(
                             location.getLatitude(),
                             location.getLongitude(),
                             location.getName()
                     );
-
             dto.setId(location.getId());
             result.add(dto);
         }
@@ -45,6 +41,11 @@ public class LocationService {
     @Transactional
     public void saveLocation(LocationRequestDto locationRequestDto) {
         User user = UserContextHolder.get();
+
+//        if (existsLocation(locationRequestDto)) {
+//            throw new IllegalArgumentException("Вы уже добавили такую локацию!");
+//        }
+
         Location location = Location.builder()
                 .name(locationRequestDto.getCityName())
                 .userId(user)
@@ -57,7 +58,17 @@ public class LocationService {
     @Transactional
     public void deleteLocation(LocationRequestDto locationRequestDto) {
         User user = UserContextHolder.get();
-     //   locationRepository.deleteLocationForUser(user,locationRequestDto.getLatitude(),locationRequestDto.getLongitude());
         locationRepository.deleteLocationForUser(user, locationRequestDto.getId());
+    }
+
+    public boolean existsLocation(LocationRequestDto locationRequestDto) {
+        User user = UserContextHolder.get();
+        boolean exists = locationRepository.getAllUserLocations(user).stream()
+                .anyMatch(l ->
+                        l.getName().equalsIgnoreCase(locationRequestDto.getCityName())
+                        && l.getLatitude().compareTo(locationRequestDto.getLatitude()) == 0
+                        && l.getLongitude().compareTo(locationRequestDto.getLongitude()) == 0
+                );
+        return exists;
     }
 }

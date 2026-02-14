@@ -17,6 +17,14 @@
 
     <h2 class="text-center mb-5">Sign Up</h2>
 
+    <div class="row justify-content-center"  >
+        <div class="col-12 col-lg-4 col-md-6 col-sm-12">
+            <div th:if="${errorMessage}" class="alert alert-danger text-center" role="alert"
+                 th:text="${errorMessage}">
+            </div>
+        </div>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
 
@@ -29,6 +37,7 @@
                            id="username"
                            th:field="*{username}"
                            required/>
+                    <span style="color: red;" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Ошибка имени!</span>
                 </div>
 
                 <div class="mb-3">
@@ -38,6 +47,7 @@
                            id="password"
                             th:field="*{password}"
                            required/>
+                    <span style="color: red;" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Ошибка пароля!</span>
                 </div>
 
 
@@ -48,7 +58,7 @@
                            id="repeatPassword"
                            th:field="*{repeatPassword}"
                            required />
-
+                    <span style="color: red;" th:if="${#fields.hasErrors('repeatPassword')}" th:errors="*{repeatPassword}">Ошибка повтора пароля!</span>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 mt-3">Sign Up</button>

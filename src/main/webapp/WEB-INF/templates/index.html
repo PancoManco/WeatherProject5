@@ -39,15 +39,24 @@
             </form>
         </div>
 
+        <div class="row justify-content-center mb-4">
+            <div class="col-12 col-lg-6 col-md-8">
+                <div th:if="${successMessage}" class="alert alert-success text-center" role="alert"
+                     th:text="${successMessage}">
+                </div>
+                <div th:if="${errorMessage}" class="alert alert-danger text-center" role="alert"
+                     th:text="${errorMessage}">
+                </div>
+            </div>
+        </div>
         <div>
             <div class="row">
                 <div class="col-12 col-lg-3 col-md-6 mb-4"
                      th:each="location : ${locationList}">
                     <div class="card h-100 position-relative weather-card">
-                        <div class="position-absolute weather-card-delete-form">
+                        <div class="position-absolute top-0 end-0 p-2 weather-card-delete-form">
                             <form th:action="@{/location/delete}" method="post" style="margin: 0;">
                                 <input type="hidden" th:value="${location.id}" name="id"/>
-                                <div th:text = "${location.id}" />
                                 <input type="hidden" th:value="${location.city}" name="city"/>
                                 <input type="hidden" th:value="${location.latitude}" name="latitude"/>
                                 <input type="hidden" th:value="${location.longitude}" name="longitude"/>
@@ -65,7 +74,7 @@
                             <h1 class="card-text" th:text="${#numbers.formatDecimal(location.temperature, 0, 0)} + '°C'">7°C</h1>
                             <h3 class="card-title" th:text="${location.city} + ', ' + ${location.country}">Tbilisi, GE</h3>
                             <p class="card-text mb-1">
-                                Feels like <span th:text="${#numbers.formatDecimal(location.fellsLikeTemperature, 0, 0)}">2</span>°C.
+                                Feels like <span th:text="${#numbers.formatDecimal(location.feelsLikeTemperature, 0, 0)}">2</span>°C.
                                 <span th:text="${location.description}">Clear sky</span>
                             </p>
                             <p class="card-text mb-1" th:text="'Humidity: ' + ${location.humidity} + '%'"></p>

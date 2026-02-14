@@ -53,7 +53,9 @@
                             <p class="card-text mb-1">Latitude: <span th:text="${location.lat}">37.779</span></p>
                             <p class="card-text mb-1">Longitude: <span th:text="${location.lon}">-122.419</span></p>
                             <p class="card-text mb-1">Country: <span th:text="${location.country}">US</span></p>
-                            <p class="card-text mb-3">State: <span th:text="${location.state ?: 'N/A'}">California</span></p>
+                            <p class="card-text mb-3" th:if="${location.state != null}">
+                                State: <span th:text="${location.state}">California</span>
+                            </p>
                             <div class="mt-auto">
                                 <form th:action="@{/location}" method="post">
                                     <input type="hidden" th:value="${location.cityName}" name="cityName"/>

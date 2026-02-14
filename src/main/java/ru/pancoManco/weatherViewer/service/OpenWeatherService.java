@@ -48,6 +48,7 @@ public class OpenWeatherService {
                 .queryParam("lat",lat)
                 .queryParam("lon",lon)
                 .queryParam("appid",apiKey)
+                .queryParam("units", "metric")
                 .toUriString();
         String JsonResponse = restTemplate.getForObject(url, String.class);
         try {

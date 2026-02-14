@@ -14,39 +14,14 @@ import java.util.List;
 
 @Repository
 public class LocationRepository {
-    private final SpringResourceTemplateResolver springResourceTemplateResolver;
+
     @PersistenceContext
     private EntityManager em;
-
-    public LocationRepository(SpringResourceTemplateResolver springResourceTemplateResolver) {
-        this.springResourceTemplateResolver = springResourceTemplateResolver;
-    }
 
     public void saveLocationForUser(Location location) {
         em.persist(location);
     }
 
-
-//    public void deleteLocationForUser(User user, BigDecimal latitude, BigDecimal longitude) {
-//        int deleted = em.createQuery("""
-//            DELETE FROM Location l
-//            WHERE l.userId = :user
-//            AND l.latitude = :lat
-//            AND l.longitude = :lon
-//            """)
-//                .setParameter("user", user)
-//                .setParameter("lat", latitude)
-//                .setParameter("lon", longitude)
-//                .executeUpdate();
-//
-//        if (deleted == 0) {
-//            throw new NoResultException(
-//
-//                    "Location not found for user " + user.getLogin() +" latitude " + latitude + " longitude " + longitude
-//            );
-//        }
-//    }
-@Transactional
 public void deleteLocationForUser(User user,Long id) {
 
     int deleted = em.createQuery("""
@@ -62,6 +37,7 @@ public void deleteLocationForUser(User user,Long id) {
         throw new NoResultException("Location not found");
     }
 }
+
     public List<Location> getAllUserLocations(User user) {
         return em.createQuery(
                         "SELECT l FROM Location l WHERE l.userId = :user",

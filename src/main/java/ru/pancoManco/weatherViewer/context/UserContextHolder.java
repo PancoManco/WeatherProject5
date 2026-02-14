@@ -1,10 +1,8 @@
 package ru.pancoManco.weatherViewer.context;
 
-import ru.pancoManco.weatherViewer.model.Session;
 import ru.pancoManco.weatherViewer.model.User;
 
-import java.util.NoSuchElementException;
-import java.util.UUID;
+
 
 public class UserContextHolder {
 
@@ -16,11 +14,7 @@ public class UserContextHolder {
         context.set(user);
     }
     public static User get() {
-        User user = context.get();
-//        if (user == null) {
-//            throw new NoSuchElementException();
-//        }
-        return user;
+        return context.get();
     }
     public static void clear() {
         context.remove();

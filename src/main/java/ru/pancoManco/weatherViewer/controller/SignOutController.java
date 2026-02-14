@@ -17,7 +17,7 @@ import java.util.UUID;
 public class SignOutController {
     private final SessionService sessionService;
 
-    @GetMapping("/logout")
+    @GetMapping("/signOut")
     public String logout(HttpServletRequest req, HttpServletResponse resp) {
         Cookie cookie = WebUtils.findCookie(req, "SESSION_ID");
         sessionService.invalidateSession(UUID.fromString(cookie.getValue()));
