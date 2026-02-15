@@ -1,6 +1,7 @@
 package ru.pancoManco.weatherViewer.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pancoManco.weatherViewer.dto.UserRegisterDto;
@@ -44,5 +45,10 @@ public class UserService {
         return userRepository.findByUsername(userSignInDto.getUsername())
                 .map(user -> passwordEncoder.matches(userSignInDto.getPassword(), user.getPassword()))
                 .orElse(false);
+    }
+
+    @Cacheable(value = "usersByUsername",key = "#username", condition = "#username != null")
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElse(null);
     }
 }

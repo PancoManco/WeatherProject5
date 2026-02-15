@@ -1,19 +1,20 @@
 package ru.pancoManco.weatherViewer.context;
 
+import ru.pancoManco.weatherViewer.model.AuthUser;
 import ru.pancoManco.weatherViewer.model.User;
 
 
 
 public class UserContextHolder {
 
-    private final static ThreadLocal<User> context = new ThreadLocal<>();
+    private final static ThreadLocal<AuthUser> context = new ThreadLocal<>();
 
     private UserContextHolder() {}
 
-    public static void set(User user) {
-        context.set(user);
+    public static void set(AuthUser authUser) {
+        context.set(authUser);
     }
-    public static User get() {
+    public static AuthUser get() {
         return context.get();
     }
     public static void clear() {

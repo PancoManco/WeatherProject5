@@ -41,4 +41,17 @@ public class SessionRepository extends BaseRepository<Session> {
             throw new NoResultException("No session found with id " + id);
         }
     }
+
+    public Optional<User> findUserById(UUID sessionId) {
+        try {
+            User result  = em.createQuery(
+                            "SELECT s FROM Session s WHERE s.id = :uuid",
+                            User.class
+                    ).setParameter("uuid", sessionId)
+                    .getSingleResult();
+            return Optional.of(result);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
 }

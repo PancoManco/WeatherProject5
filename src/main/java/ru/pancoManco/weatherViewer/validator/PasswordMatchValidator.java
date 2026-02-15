@@ -9,9 +9,7 @@ public class PasswordMatchValidator implements ConstraintValidator<PasswordMatch
 
     @Override
     public boolean isValid(UserRegisterDto dto, ConstraintValidatorContext context) {
-        if (dto.getPassword()==null || dto.getRepeatPassword()==null) {
-            return true;
-        }
+
         boolean match = dto.getPassword().equals(dto.getRepeatPassword());
 
         if (!match) {

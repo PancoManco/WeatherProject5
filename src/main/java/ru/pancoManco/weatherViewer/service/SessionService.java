@@ -12,12 +12,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional
+
 @RequiredArgsConstructor
 public class SessionService {
 
     private final SessionRepository sessionRepository;
-
+    @Transactional
     public UUID createNewSession(User user) {
         //   sessionRepository.deleteByUserId(user);
         Session session = new Session(UUID.randomUUID(),user, LocalDateTime.now().plusHours(1));
@@ -29,6 +29,11 @@ public class SessionService {
         return sessionRepository.findById(sessionId);
     }
 
+    public Optional<User> getUserById(UUID sessionId) {
+      return sessionRepository.findUserById(sessionId);
+    }
+
+    @Transactional
     public void invalidateSession(UUID sessionId) {
        sessionRepository.deleteById(sessionId);
     }

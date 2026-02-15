@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import ru.pancoManco.weatherViewer.context.UserContextHolder;
+import ru.pancoManco.weatherViewer.model.AuthUser;
 import ru.pancoManco.weatherViewer.model.Session;
+import ru.pancoManco.weatherViewer.model.User;
 import ru.pancoManco.weatherViewer.service.SessionService;
 import ru.pancoManco.weatherViewer.util.WebUtils;
 
@@ -35,10 +37,10 @@ public class AuthInterceptor implements HandlerInterceptor {
             Optional<Session> sessionOpt = sessionService.getSessionById(UUID.fromString(sessionId));
 
             if (sessionOpt.isPresent()) {
-
                 Session currentSession = sessionOpt.get();
+                User user = currentSession.getUserId();
                 // todo checking expiringAt
-                UserContextHolder.set(currentSession.getUserId());
+                UserContextHolder.set(new AuthUser(user.getId(), user.getLogin()));
                 return true;
             }
         }
@@ -46,7 +48,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         return false;
     }
 
-
+    @Override
     public void afterCompletion(HttpServletRequest request,
                                 HttpServletResponse response,
                                 Object handler,
