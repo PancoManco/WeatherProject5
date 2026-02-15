@@ -21,7 +21,7 @@ public class UserRepository extends BaseRepository<User> {
                     .getSingleResult();
             return Optional.of(user);
         } catch (NoResultException e) {
-            return Optional.empty();
+            throw new NoResultException("User not found with login: " + login);
         }
     }
 }

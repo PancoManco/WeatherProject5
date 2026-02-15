@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenWeatherGeoResponseDto {
+
     @JsonProperty("name")
     private String cityName;
     @JsonProperty("lat")

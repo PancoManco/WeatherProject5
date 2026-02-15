@@ -20,9 +20,8 @@ public void deleteLocationByIdAndUser(User user, Long id) {
             .setParameter("id", id)
             .setParameter("user", user)
             .executeUpdate();
-
     if (deleted == 0) {
-        throw new NoResultException("Location not found");
+        throw new NoResultException("Location not found with id " + id);
     }
 }
 
