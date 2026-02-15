@@ -39,7 +39,6 @@ public class SignInController {
                     "Invalid username or password");
             return "redirect:/sign-in";
         }
-
         UUID sessionId = userService.authenticate(userSignInDto);
         WebUtils.setCookie("SESSION_ID",sessionId.toString(), 60 * 60,resp);
         return "redirect:/";

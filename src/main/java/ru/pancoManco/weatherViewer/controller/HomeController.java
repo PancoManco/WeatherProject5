@@ -11,7 +11,6 @@ import ru.pancoManco.weatherViewer.dto.LocationRequestDto;
 import ru.pancoManco.weatherViewer.dto.OpenWeatherCityResponseDto;
 import ru.pancoManco.weatherViewer.service.LocationService;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class HomeController {
 
     @GetMapping
     public String getHomePage(Model model) {
-        List<OpenWeatherCityResponseDto> locations = locationService.getAllLocationForUserAsDto();
+        List<OpenWeatherCityResponseDto> locations = locationService.getAllLocationForUser();
         model.addAttribute("locationList",locations);
        return "index";
    }

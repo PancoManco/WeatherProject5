@@ -10,14 +10,7 @@ import ru.pancoManco.weatherViewer.model.User;
 import java.util.Optional;
 
 @Repository
-public class UserRepository {
-
-    @PersistenceContext
-    EntityManager em;
-
-    public void save(User user) {
-        em.persist(user);
-    }
+public class UserRepository extends BaseRepository<User> {
 
     public Optional<User> findByUsername(String login) {
         try {

@@ -10,8 +10,6 @@ import ru.pancoManco.weatherViewer.model.Location;
 import ru.pancoManco.weatherViewer.model.User;
 import ru.pancoManco.weatherViewer.repository.LocationRepository;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final OpenWeatherService openWeatherService;
 
-    public List<OpenWeatherCityResponseDto> getAllLocationForUserAsDto() {
+    public List<OpenWeatherCityResponseDto> getAllLocationForUser() {
         User user = UserContextHolder.get();
         List<Location> locations = locationRepository.getAllUserLocations(user);
         List<OpenWeatherCityResponseDto> result = new ArrayList<>();
@@ -41,24 +39,19 @@ public class LocationService {
     @Transactional
     public void saveLocation(LocationRequestDto locationRequestDto) {
         User user = UserContextHolder.get();
-
-//        if (existsLocation(locationRequestDto)) {
-//            throw new IllegalArgumentException("Вы уже добавили такую локацию!");
-//        }
-
         Location location = Location.builder()
                 .name(locationRequestDto.getCityName())
                 .userId(user)
                 .latitude(locationRequestDto.getLatitude())
                 .longitude(locationRequestDto.getLongitude())
                 .build();
-            locationRepository.saveLocationForUser(location);
+            locationRepository.save(location);
     }
 
     @Transactional
     public void deleteLocation(LocationRequestDto locationRequestDto) {
         User user = UserContextHolder.get();
-        locationRepository.deleteLocationForUser(user, locationRequestDto.getId());
+        locationRepository.deleteLocationByIdAndUser(user, locationRequestDto.getId());
     }
 
     public boolean existsLocation(LocationRequestDto locationRequestDto) {

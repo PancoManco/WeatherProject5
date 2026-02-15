@@ -1,28 +1,16 @@
 package ru.pancoManco.weatherViewer.repository;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import ru.pancoManco.weatherViewer.model.Location;
 import ru.pancoManco.weatherViewer.model.User;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public class LocationRepository {
+public class LocationRepository extends BaseRepository<Location> {
 
-    @PersistenceContext
-    private EntityManager em;
-
-    public void saveLocationForUser(Location location) {
-        em.persist(location);
-    }
-
-public void deleteLocationForUser(User user,Long id) {
+public void deleteLocationByIdAndUser(User user, Long id) {
 
     int deleted = em.createQuery("""
         DELETE FROM Location l

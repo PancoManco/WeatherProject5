@@ -25,10 +25,6 @@ public class UserService {
 
 
     public void register(UserRegisterDto userRegisterDto) {
-//        if (userRepository.findByUsername(userRegisterDto.getUsername()).isPresent()) {
-//            throw new UserAlreadyExistException();
-//        }
-
         User user = userMapper.toEntity(userRegisterDto);
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
@@ -36,16 +32,6 @@ public class UserService {
     }
 
     public UUID authenticate(UserSignInDto userSignInDto)  {
-//        String username = userSignInDto.getUsername();
-//        String password = userSignInDto.getPassword();
-//        Optional<User> opt = userRepository.findByUsername(username);
-//        if (!opt.isPresent()) {
-//            throw new WrongCredentialsException();
-//        }
-//        User user = opt.get();
-//        if (!passwordEncoder.matches(password, user.getPassword())) {
-//            throw new WrongCredentialsException();
-//        }
        Optional<User> opt = userRepository.findByUsername(userSignInDto.getUsername());
         return sessionService.createNewSession(opt.get());
     }

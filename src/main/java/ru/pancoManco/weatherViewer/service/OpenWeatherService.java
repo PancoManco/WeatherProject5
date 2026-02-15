@@ -34,7 +34,6 @@ public class OpenWeatherService {
                 .queryParam("appid",apiKey)
                 .toUriString();
         String JsonResponse = restTemplate.getForObject(url, String.class);
-
         try {
             return Arrays.asList(objectMapper.readValue(JsonResponse,OpenWeatherGeoResponseDto[].class));
         } catch (JsonProcessingException e) {
