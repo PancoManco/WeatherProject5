@@ -1,9 +1,7 @@
 package ru.pancoManco.weatherViewer.repository;
 
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import ru.pancoManco.weatherViewer.model.User;
 
@@ -21,7 +19,7 @@ public class UserRepository extends BaseRepository<User> {
                     .getSingleResult();
             return Optional.of(user);
         } catch (NoResultException e) {
-            throw new NoResultException("User not found with login: " + login);
+            return Optional.empty();
         }
     }
 }

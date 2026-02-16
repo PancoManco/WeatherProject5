@@ -28,7 +28,7 @@ public class HomeController {
     public String getHomePage(Model model) {
         List<OpenWeatherCityResponseDto> locations = locationService.getAllLocationForUser();
         model.addAttribute("locationList",locations);
-       return "index";
+       return "index1";
    }
 
     @PostMapping("/location")
