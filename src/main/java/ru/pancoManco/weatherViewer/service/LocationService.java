@@ -3,8 +3,7 @@ package ru.pancoManco.weatherViewer.service;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pancoManco.weatherViewer.context.UserContextHolder;
@@ -21,13 +20,13 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class LocationService {
     private final LocationRepository locationRepository;
     private final OpenWeatherService openWeatherService;
     private final UserService userService;
     private final Validator validator;
 
-    private static final Logger log = LoggerFactory.getLogger(LocationService.class);
 
     public List<OpenWeatherCityResponseDto> getAllLocationForUser() {
         AuthUser authUser = UserContextHolder.get();
@@ -41,8 +40,9 @@ public class LocationService {
                             location.getLongitude(),
                             location.getName()
                     );
-            validateDto(dto,location);
-
+            if (!isValidatedResponseDto(dto, location)) {
+                continue;
+            }
             dto.setId(location.getId());
             OpenWeatherCityResponseDto.Coord originalCoord = new OpenWeatherCityResponseDto.Coord();
             originalCoord.setLat(location.getLatitude());
@@ -85,7 +85,7 @@ public class LocationService {
         return exists;
     }
 
-    private void validateDto(OpenWeatherCityResponseDto dto,Location location) {
+    private boolean isValidatedResponseDto(OpenWeatherCityResponseDto dto, Location location) {
         Set<ConstraintViolation<OpenWeatherCityResponseDto>> violations = validator.validate(dto);
         if (!violations.isEmpty()) {
             for (ConstraintViolation<OpenWeatherCityResponseDto> violation : violations) {
@@ -94,7 +94,8 @@ public class LocationService {
                         violation.getPropertyPath(),
                         violation.getMessage());
             }
-            //  throw new ConstraintViolationException("Данные от API некорректны", violations);
+            return false;
         }
+        return true;
     }
 }

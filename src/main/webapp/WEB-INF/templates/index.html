@@ -58,37 +58,37 @@
                             <form th:action="@{/location/delete}" method="post" style="margin: 0;">
                                 <input type="hidden" th:value="${location.id}" name="id"/>
                                 <input type="hidden" th:value="${location.city}" name="city"/>
-                                <input type="hidden" th:value="${location.latitude}" name="latitude"/>
-                                <input type="hidden" th:value="${location.longitude}" name="longitude"/>
+                                <input type="hidden" th:value="${location.coord.lat}" name="latitude"/>
+                                <input type="hidden" th:value="${location.coord.lon}" name="longitude"/>
                                 <input type="hidden" name="_method" value="DELETE"/>
                                 <button type="submit" class="btn-close" aria-label="Delete"></button>
                             </form>
                         </div>
 
                         <img class="card-img-top img-fluid"
-                             th:src="'https://openweathermap.org/img/wn/' + ${location.icon} + '@4x.png'"
-                             th:alt="${location.description}"
+                             th:src="'https://openweathermap.org/img/wn/' + ${location.weather[0].icon} + '@4x.png'"
+                             th:alt="${location.weather[0].description}"
                              src="https://openweathermap.org/img/wn/01n @4x.png">
 
                         <div class="card-body d-flex flex-column">
-                            <h1 class="card-text" th:text="${#numbers.formatDecimal(location.temperature, 0, 0)} + '°C'">7°C</h1>
-                            <h3 class="card-title" th:text="${location.city} + ', ' + ${location.country}">Tbilisi, GE</h3>
+                            <h1 class="card-text" th:text="${#numbers.formatDecimal(location.main.temp, 0, 0)} + '°C'">7°C</h1>
+                            <h3 class="card-title" th:text="${location.city} + ', ' + ${location.sys.country}">Tbilisi, GE</h3>
                             <p class="card-text mb-1">
-                                Feels like <span th:text="${#numbers.formatDecimal(location.feelsLikeTemperature, 0, 0)}">2</span>°C.
-                                <span th:text="${location.description}">Clear sky</span>
+                                Feels like <span th:text="${#numbers.formatDecimal(location.main.feels_like, 0, 0)}">2</span>°C.
+                                <span th:text="${location.weather[0].description}">Clear sky</span>
                             </p>
-                            <p class="card-text mb-1" th:text="'Humidity: ' + ${location.humidity} + '%'"></p>
-                            <p class="card-text mb-1" th:text="'Latitude: ' + ${location.latitude}"></p>
-                            <p class="card-text mb-1" th:text="'Longtitude: ' + ${location.longitude}"></p>
+                            <p class="card-text mb-1" th:text="'Humidity: ' + ${location.main.humidity} + '%'"></p>
+                            <p class="card-text mb-1" th:text="'Latitude: ' + ${location.coord.latFormatted}"></p>
+                            <p class="card-text mb-1" th:text="'Longtitude: ' + ${location.coord.lonFormatted}"></p>
                         </div>
                     </div>
                 </div>
-                    <div class="col-12" th:if="${#lists.isEmpty(locationList)}">
-                        <p class="text-muted">No locations tracked yet.</p>
-                    </div>
-                    </div>
-            </div>
+                <div class="col-12" th:if="${#lists.isEmpty(locationList)}">
+                    <p class="text-muted">No locations tracked yet.</p>
                 </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 

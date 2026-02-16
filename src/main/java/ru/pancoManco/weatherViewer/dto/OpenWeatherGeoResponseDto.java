@@ -2,10 +2,7 @@ package ru.pancoManco.weatherViewer.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -19,7 +16,7 @@ import java.math.BigDecimal;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenWeatherGeoResponseDto {
 
-    @NotNull
+    @NotBlank
     @JsonProperty("name")
     private String cityName;
 

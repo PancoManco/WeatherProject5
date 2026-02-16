@@ -27,11 +27,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                              HttpServletResponse response,
                              Object handler) throws Exception {
 
-        String uri = request.getRequestURI();
-        if (uri.equals("/sign-in") || uri.equals("/sign-up")) {
-            return true;
-        }
+       AuthUser authUser = null;
+
         Cookie cookie = WebUtils.findCookie(request, "SESSION_ID");
+
         if (cookie != null) {
             String sessionId = cookie.getValue();
             Optional<Session> sessionOpt = sessionService.getSessionById(UUID.fromString(sessionId));
@@ -40,12 +39,26 @@ public class AuthInterceptor implements HandlerInterceptor {
                 Session currentSession = sessionOpt.get();
                 User user = currentSession.getUserId();
                 // todo checking expiringAt
-                UserContextHolder.set(new AuthUser(user.getId(), user.getLogin()));
-                return true;
+                authUser = new AuthUser(user.getId(), user.getLogin());
+                UserContextHolder.set(authUser);
             }
         }
-        response.sendRedirect("/sign-in");
-        return false;
+        String uri = request.getRequestURI();
+
+        if (uri.startsWith("/css") || uri.startsWith("/js")||uri.startsWith("/images")) {
+            return true;
+        }
+       if (authUser != null && (uri.equals("/sign-in") || uri.equals("/sign-up"))) {
+           response.sendRedirect("/");
+           return false;
+       }
+
+        if (authUser == null && !uri.equals("/sign-in") && !uri.equals("/sign-up")) {
+            response.sendRedirect("/sign-in");
+            return false;
+        }
+
+        return true;
     }
 
     @Override

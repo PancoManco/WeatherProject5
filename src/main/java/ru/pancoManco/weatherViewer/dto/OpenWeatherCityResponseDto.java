@@ -34,8 +34,6 @@ public class OpenWeatherCityResponseDto {
 
         @Getter
         @Setter
-        @NoArgsConstructor
-        @AllArgsConstructor
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Coord {
 
@@ -60,8 +58,6 @@ public class OpenWeatherCityResponseDto {
 
         @Getter
         @Setter
-        @RequiredArgsConstructor
-        @AllArgsConstructor
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Weather {
             @NotBlank(message="Description cannot be empty or blank")
@@ -72,8 +68,6 @@ public class OpenWeatherCityResponseDto {
 
         @Getter
         @Setter
-        @RequiredArgsConstructor
-        @AllArgsConstructor
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Main {
             private double temp;
@@ -87,8 +81,6 @@ public class OpenWeatherCityResponseDto {
 
         @Getter
         @Setter
-        @RequiredArgsConstructor
-        @AllArgsConstructor
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Sys {
             @NotBlank

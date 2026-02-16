@@ -28,17 +28,13 @@ public class HomeController {
     public String getHomePage(Model model) {
         List<OpenWeatherCityResponseDto> locations = locationService.getAllLocationForUser();
         model.addAttribute("locationList",locations);
-       return "index1";
+        return "index";
    }
 
     @PostMapping("/location")
     public String saveLocation(@ModelAttribute("location") @Valid LocationRequestDto locationRequestDto,
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes) {
-//        if (bindingResult.hasErrors()) {
-//           bindingResult.getAllErrors().forEach(error -> logger.error("Saving location validation error : {}", error));
-//           return "redirect:/";
-//        }
         boolean exists = locationService.existsLocation(locationRequestDto);
         if (exists) {
             redirectAttributes.addFlashAttribute("errorMessage", "You already added this location");
@@ -52,10 +48,6 @@ public class HomeController {
    @PostMapping("/location/delete")
     public String DeleteLocation(@ModelAttribute("location") @Valid LocationRequestDto locationRequestDto,
                                  BindingResult bindingResult) {
-//       if (bindingResult.hasErrors()) {
-//           bindingResult.getAllErrors().forEach(error -> logger.error("Deleting Location validation error: {}", error));
-//           return "redirect:/";
-//       }
         locationService.deleteLocation(locationRequestDto);
         return "redirect:/";
    }
