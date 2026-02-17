@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.pancoManco.weatherViewer.model.Session;
 import ru.pancoManco.weatherViewer.model.User;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,17 +21,15 @@ public class SessionRepository extends BaseRepository<Session> {
                     .getSingleResult();
             return Optional.of(result);
         } catch (NoResultException e) {
-            throw new NoResultException("No session found with id " + id);
+          return  Optional.empty();
+          //  throw new NoResultException("No session found with id " + id);
         }
     }
 
-    public void deleteByUser(User user) {
-            int deleted = em.createQuery("DELETE FROM Session s WHERE s.userId = :userId")
+    public int deleteByUserId(User user) {
+            return em.createQuery("DELETE FROM Session s WHERE s.userId = :userId")
                     .setParameter("userId", user.getId())
                     .executeUpdate();
-        if (deleted == 0) {
-            throw new NoResultException("No session found with User " + user.getLogin());
-        }
     }
 
     public void deleteById(UUID id) {
@@ -51,7 +50,14 @@ public class SessionRepository extends BaseRepository<Session> {
                     .getSingleResult();
             return Optional.of(result);
         } catch (NoResultException e) {
-           throw new NoResultException("No user found with session id " + sessionId);
+            return  Optional.empty();
+           //throw new NoResultException("No user found with session id " + sessionId);
         }
+    }
+
+    public int deleteByExpiresAtBefore(LocalDateTime now) {
+        return em.createQuery("DELETE FROM Session s WHERE s.expiresAt < :now")
+                .setParameter("now", now)
+                .executeUpdate();
     }
 }

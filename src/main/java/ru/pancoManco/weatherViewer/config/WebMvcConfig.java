@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -15,6 +16,7 @@ import ru.pancoManco.weatherViewer.interceptor.AuthInterceptor;
 @EnableWebMvc
 @Import(ThymeleafConfig.class)
 @ComponentScan(basePackages = "ru.pancoManco.weatherViewer")
+@EnableScheduling
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final AuthInterceptor authInterceptor;
@@ -25,7 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authInterceptor).addPathPatterns("/**").excludePathPatterns("/sign-in", "/sign-up","/css/**");
+        registry.addInterceptor(authInterceptor).addPathPatterns("/**").excludePathPatterns("/css/**","/images/**","/signOut");
     }
 
     @Override
@@ -37,7 +39,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/css/");
 
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("classpath:/static/images/");
+                .addResourceLocations("/images/");
+
+        registry.addResourceHandler("/js/**")
+                .addResourceLocations("/js/");
     }
 
 }

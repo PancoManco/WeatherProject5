@@ -11,7 +11,7 @@
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="#" th:href ="@{/}">
-            <img src="images/weather-app.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            <img th:src="@{/images/weather-app.png}"  alt="" width="30" height="24" class="d-inline-block align-text-top">
             Weather Tracker
         </a>
         <div class="d-flex align-items-center" th:if="${currentUser.login != null}">
@@ -40,15 +40,18 @@
         </div>
 
         <div class="row justify-content-center mb-4">
-            <div class="col-12 col-lg-6 col-md-8">
-                <div th:if="${successMessage}" class="alert alert-success text-center" role="alert"
+            <div class="w-100" style="max-width: 100%;">
+                <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show w-100 text-center" role="alert"
                      th:text="${successMessage}">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <div th:if="${errorMessage}" class="alert alert-danger text-center" role="alert"
+                <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show w-100 text-center" role="alert"
                      th:text="${errorMessage}">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </div>
         </div>
+
         <div>
             <div class="row">
                 <div class="col-12 col-lg-3 col-md-6 mb-4"
@@ -97,5 +100,6 @@
         <span>© Weather Viewer, project from <a href="https://zhukovsd.github.io/java-backend-learning-course/">zhukovsd/java-backend-learning-course</a> roadmap.</span>
     </div>
 </footer>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

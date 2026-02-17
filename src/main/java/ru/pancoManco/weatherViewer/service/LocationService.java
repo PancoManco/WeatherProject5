@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.pancoManco.weatherViewer.context.UserContextHolder;
 import ru.pancoManco.weatherViewer.dto.LocationRequestDto;
 import ru.pancoManco.weatherViewer.dto.OpenWeatherCityResponseDto;
+import ru.pancoManco.weatherViewer.dto.OpenWeatherGeoResponseDto;
 import ru.pancoManco.weatherViewer.model.AuthUser;
 import ru.pancoManco.weatherViewer.model.Location;
 import ru.pancoManco.weatherViewer.model.User;
@@ -17,6 +18,7 @@ import ru.pancoManco.weatherViewer.repository.LocationRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Service
@@ -32,25 +34,50 @@ public class LocationService {
         AuthUser authUser = UserContextHolder.get();
         User user = userService.getUserByUsername(authUser.login());
         List<Location> locations = locationRepository.getAllUserLocations(user);
-        List<OpenWeatherCityResponseDto> result = new ArrayList<>();
-        for (Location location : locations) {
-            OpenWeatherCityResponseDto dto =
-                    openWeatherService.getWeatherByCoordinates(
-                            location.getLatitude(),
-                            location.getLongitude(),
-                            location.getName()
-                    );
-            if (!isValidatedResponseDto(dto, location)) {
-                continue;
-            }
-            dto.setId(location.getId());
-            OpenWeatherCityResponseDto.Coord originalCoord = new OpenWeatherCityResponseDto.Coord();
-            originalCoord.setLat(location.getLatitude());
-            originalCoord.setLon(location.getLongitude());
-            dto.setCoord(originalCoord);
-            result.add(dto);
-        }
-        return result;
+
+        List<CompletableFuture<OpenWeatherCityResponseDto>> futures = locations.stream()
+                .map(location -> CompletableFuture.supplyAsync(() ->{
+                            OpenWeatherCityResponseDto dto =
+                                    openWeatherService.getWeatherByCoordinates(
+                                            location.getLatitude(),
+                                            location.getLongitude(),
+                                            location.getName()
+                                    );
+                            if (!isValidatedResponseDto(dto,location))
+                            {
+                                OpenWeatherCityResponseDto emptyDto = new OpenWeatherCityResponseDto();
+                                emptyDto.setCity(location.getName());
+                                return emptyDto;
+                            }
+                            dto.setId(location.getId());
+                            OpenWeatherCityResponseDto.Coord originalCoord= new OpenWeatherCityResponseDto.Coord();
+                            originalCoord.setLat(location.getLatitude());
+                            originalCoord.setLon(location.getLongitude());
+                            dto.setCoord(originalCoord);
+                            return dto;
+                        })).toList();
+
+        return futures.stream().map(CompletableFuture::join).filter(dto->dto!=null).toList();
+
+//        List<OpenWeatherCityResponseDto> result = new ArrayList<>();
+//        for (Location location : locations) {
+//            OpenWeatherCityResponseDto dto =
+//                    openWeatherService.getWeatherByCoordinates(
+//                            location.getLatitude(),
+//                            location.getLongitude(),
+//                            location.getName()
+//                    );
+//            if (!isValidatedResponseDto(dto, location)) {
+//                continue;
+//            }
+//            dto.setId(location.getId());
+//            OpenWeatherCityResponseDto.Coord originalCoord = new OpenWeatherCityResponseDto.Coord();
+//            originalCoord.setLat(location.getLatitude());
+//            originalCoord.setLon(location.getLongitude());
+//            dto.setCoord(originalCoord);
+//            result.add(dto);
+//        }
+//        return result;
     }
 
     @Transactional
@@ -67,10 +94,10 @@ public class LocationService {
     }
 
     @Transactional
-    public void deleteLocation(LocationRequestDto locationRequestDto) {
+    public int deleteLocation(LocationRequestDto locationRequestDto) {
         AuthUser authUser = UserContextHolder.get();
         User user = userService.getUserByUsername(authUser.login());
-        locationRepository.deleteLocationByIdAndUser(user, locationRequestDto.getId());
+      return  locationRepository.deleteLocationByIdAndUser(user, locationRequestDto.getId());
     }
 
     public boolean existsLocation(LocationRequestDto locationRequestDto) {

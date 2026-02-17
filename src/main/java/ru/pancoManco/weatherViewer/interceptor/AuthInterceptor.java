@@ -28,9 +28,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                              Object handler) throws Exception {
 
        AuthUser authUser = null;
-
         Cookie cookie = WebUtils.findCookie(request, "SESSION_ID");
-
         if (cookie != null) {
             String sessionId = cookie.getValue();
             Optional<Session> sessionOpt = sessionService.getSessionById(UUID.fromString(sessionId));
@@ -38,13 +36,11 @@ public class AuthInterceptor implements HandlerInterceptor {
             if (sessionOpt.isPresent()) {
                 Session currentSession = sessionOpt.get();
                 User user = currentSession.getUserId();
-                // todo checking expiringAt
                 authUser = new AuthUser(user.getId(), user.getLogin());
                 UserContextHolder.set(authUser);
             }
         }
         String uri = request.getRequestURI();
-
         if (uri.startsWith("/css") || uri.startsWith("/js")||uri.startsWith("/images")) {
             return true;
         }

@@ -47,8 +47,11 @@ public class HomeController {
 
    @PostMapping("/location/delete")
     public String DeleteLocation(@ModelAttribute("location") @Valid LocationRequestDto locationRequestDto,
-                                 BindingResult bindingResult) {
-        locationService.deleteLocation(locationRequestDto);
+                                 BindingResult bindingResult,RedirectAttributes redirectAttributes) {
+        int deleted = locationService.deleteLocation(locationRequestDto);
+        if (deleted > 0) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Location was successfully deleted");
+        }
         return "redirect:/";
    }
 }

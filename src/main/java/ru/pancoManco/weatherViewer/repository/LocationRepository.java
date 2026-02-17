@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public class LocationRepository extends BaseRepository<Location> {
 
-public void deleteLocationByIdAndUser(User user, Long id) {
+public int deleteLocationByIdAndUser(User user, Long id) {
 
-    int deleted = em.createQuery("""
+    return em.createQuery("""
         DELETE FROM Location l
         WHERE l.id = :id
         AND l.userId = :user
@@ -20,9 +20,6 @@ public void deleteLocationByIdAndUser(User user, Long id) {
             .setParameter("id", id)
             .setParameter("user", user)
             .executeUpdate();
-    if (deleted == 0) {
-        throw new NoResultException("Location not found with id " + id);
-    }
 }
 
     public List<Location> getAllUserLocations(User user) {
