@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,11 +27,13 @@ import java.util.Set;
 @Service
 @Slf4j
 public class OpenWeatherService {
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
     private final Validator validator;
 
+
     @Value("${api.key}")
+    @Setter
     private String apiKey;
 
     public List<OpenWeatherGeoResponseDto> getGeoByCityName(String city)  {

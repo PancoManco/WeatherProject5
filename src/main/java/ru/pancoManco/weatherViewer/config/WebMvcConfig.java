@@ -27,7 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authInterceptor).addPathPatterns("/**").excludePathPatterns("/css/**","/images/**","/signOut");
+        registry.addInterceptor(authInterceptor).addPathPatterns("/**").excludePathPatterns("/css/**","/images/**","/signOut","/h2-console/**");
     }
 
     @Override

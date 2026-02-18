@@ -21,13 +21,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final SessionService sessionService;
-    private final PasswordEncoderUtil passwordEncoder;
+    // private final PasswordEncoderUtil passwordEncoder;
     private final UserMapper userMapper;
 
 
     public void register(UserRegisterDto userRegisterDto) {
         User user = userMapper.toEntity(userRegisterDto);
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        String encodedPassword = PasswordEncoderUtil.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
     }
@@ -43,7 +43,7 @@ public class UserService {
 
     public boolean isCorrectPasswordOrLogin(UserSignInDto userSignInDto) {
         return userRepository.findByUsername(userSignInDto.getUsername())
-                .map(user -> passwordEncoder.matches(userSignInDto.getPassword(), user.getPassword()))
+                .map(user -> PasswordEncoderUtil.matches(userSignInDto.getPassword(), user.getPassword()))
                 .orElse(false);
     }
 
