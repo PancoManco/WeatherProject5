@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.pancoManco.weatherViewer.service.SessionService;
-import ru.pancoManco.weatherViewer.util.CookieUtil;
 import ru.pancoManco.weatherViewer.util.WebUtils;
 
 import java.util.UUID;
@@ -21,7 +20,7 @@ public class SignOutController {
     public String logout(HttpServletRequest req, HttpServletResponse resp) {
         Cookie cookie = WebUtils.findCookie(req, "SESSION_ID");
         sessionService.invalidateSession(UUID.fromString(cookie.getValue()));
-        CookieUtil.deleteSessionCookie(resp);
+        WebUtils.deleteSessionCookie(resp);
         return "redirect:/sign-in";
     }
 }

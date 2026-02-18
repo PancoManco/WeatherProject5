@@ -9,13 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.pancoManco.weatherViewer.context.UserContextHolder;
 import ru.pancoManco.weatherViewer.dto.LocationRequestDto;
 import ru.pancoManco.weatherViewer.dto.OpenWeatherCityResponseDto;
-import ru.pancoManco.weatherViewer.dto.OpenWeatherGeoResponseDto;
 import ru.pancoManco.weatherViewer.model.AuthUser;
 import ru.pancoManco.weatherViewer.model.Location;
 import ru.pancoManco.weatherViewer.model.User;
 import ru.pancoManco.weatherViewer.repository.LocationRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -59,25 +57,6 @@ public class LocationService {
 
         return futures.stream().map(CompletableFuture::join).filter(dto->dto!=null).toList();
 
-//        List<OpenWeatherCityResponseDto> result = new ArrayList<>();
-//        for (Location location : locations) {
-//            OpenWeatherCityResponseDto dto =
-//                    openWeatherService.getWeatherByCoordinates(
-//                            location.getLatitude(),
-//                            location.getLongitude(),
-//                            location.getName()
-//                    );
-//            if (!isValidatedResponseDto(dto, location)) {
-//                continue;
-//            }
-//            dto.setId(location.getId());
-//            OpenWeatherCityResponseDto.Coord originalCoord = new OpenWeatherCityResponseDto.Coord();
-//            originalCoord.setLat(location.getLatitude());
-//            originalCoord.setLon(location.getLongitude());
-//            dto.setCoord(originalCoord);
-//            result.add(dto);
-//        }
-//        return result;
     }
 
     @Transactional

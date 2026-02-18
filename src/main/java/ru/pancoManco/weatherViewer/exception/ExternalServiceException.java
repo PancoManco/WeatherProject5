@@ -1,5 +1,8 @@
 package ru.pancoManco.weatherViewer.exception;
 
+import lombok.Getter;
+
+@Getter
 public class ExternalServiceException extends RuntimeException {
     private final int statusCode;
 
@@ -10,10 +13,7 @@ public class ExternalServiceException extends RuntimeException {
 
     public ExternalServiceException(String message) {
         super(message);
-        this.statusCode = 500; // по умолчанию
+        this.statusCode = 500;
     }
 
-    public int getStatusCode() {
-        return statusCode;
-    }
 }

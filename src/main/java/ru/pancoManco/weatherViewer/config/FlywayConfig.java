@@ -16,6 +16,7 @@ public class FlywayConfig {
 
     @Bean
     public Flyway flyway(@Qualifier("dataSource") DataSource dataSource) {
+        log.info("Creating Flyway");
         Flyway flyway = Flyway.configure()
                 .dataSource(dataSource)
                 .locations("classpath:db/migration")

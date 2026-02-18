@@ -5,10 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public final class WebUtils {
+    public static final String SESSION_COOKIE_NAME = "SESSION_ID";
 
     private WebUtils() {
     }
-
     public static Cookie findCookie(HttpServletRequest req, String cookieName) {
         Cookie[] cookies = req.getCookies();
         if (cookies != null) {
@@ -28,5 +28,12 @@ public final class WebUtils {
         c.setPath("/");
         c.setHttpOnly(true);
         resp.addCookie(c);
+    }
+
+    public static void deleteSessionCookie(HttpServletResponse response) {
+        Cookie emptyCookie = new Cookie(SESSION_COOKIE_NAME, null);
+        emptyCookie.setPath("/");
+        emptyCookie.setMaxAge(0);
+        response.addCookie(emptyCookie);
     }
 }

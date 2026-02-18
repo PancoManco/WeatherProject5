@@ -8,11 +8,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.pancoManco.weatherViewer.dto.OpenWeatherCityResponseDto;
 import ru.pancoManco.weatherViewer.dto.OpenWeatherGeoResponseDto;
+import ru.pancoManco.weatherViewer.exception.ApiConnectionException;
 import ru.pancoManco.weatherViewer.exception.ExternalServiceException;
 
 import java.math.BigDecimal;
@@ -62,7 +64,10 @@ public class OpenWeatherService {
                     statusCode,
                     e.getResponseBodyAsString());
             throw new ExternalServiceException("Weather provider returned an error",statusCode);
-
+        }
+        catch (ResourceAccessException e) {
+            log.error("Failed to access OpenWeather API. city={}", city, e);
+            throw new ApiConnectionException("Failed to connect to OpenWeather API");
         }
     }
 
@@ -96,6 +101,10 @@ public class OpenWeatherService {
                     city, lat, lon, statusCode, e.getResponseBodyAsString());
 
              throw new ExternalServiceException("Weather provider returned an error",statusCode);
+        }
+        catch (ResourceAccessException e) {
+            log.error("Failed to access OpenWeather API by weather coordinates. city={}", city, e);
+            throw  new ApiConnectionException("Failed to connect to OpenWeather API");
         }
     }
 

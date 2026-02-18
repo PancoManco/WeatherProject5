@@ -20,8 +20,7 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     @Transactional
     public UUID createNewSession(User user) {
-      //  int deleted =  sessionRepository.deleteByUserId(user);
-
+      //  int deleted =  sessionRepository.deleteByUser(user);
         Session session = new Session(UUID.randomUUID(),user, LocalDateTime.now().plusHours(1));
         sessionRepository.save(session);
         return session.getId();
@@ -31,9 +30,6 @@ public class SessionService {
         return sessionRepository.findById(sessionId);
     }
 
-    public Optional<User> getUserById(UUID sessionId) {
-      return sessionRepository.findUserById(sessionId);
-    }
 
     @Transactional
     public void invalidateSession(UUID sessionId) {

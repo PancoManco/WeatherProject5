@@ -1,8 +1,6 @@
 package ru.pancoManco.weatherViewer.context;
 
 import ru.pancoManco.weatherViewer.model.AuthUser;
-import ru.pancoManco.weatherViewer.model.User;
-
 
 
 public class UserContextHolder {

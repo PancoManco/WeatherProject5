@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import ru.pancoManco.weatherViewer.exception.ApiConnectionException;
 import ru.pancoManco.weatherViewer.exception.ExternalServiceException;
 
 @ControllerAdvice
@@ -16,7 +17,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExternalServiceException.class)
     public String handleExternalServiceException(ExternalServiceException ex, Model model) {
         int status = ex.getStatusCode();
-
         log.error("External service error: {} (status {})", ex.getMessage(), status);
 
         switch (status) {
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public void handleJsonDeserialization(RuntimeException e) {
-        log.error("JSON parsing failed: {}", e.getMessage(), e);
+        log.error("JSON parsing failed or unexpected runtime error: {}", e.getMessage(), e);
     }
 
     @ExceptionHandler(NoResultException.class)
@@ -54,8 +54,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public String handleNotFound(NoHandlerFoundException ex, Model model) {
+        log.warn("Page not found: {}", ex.getRequestURL());
         model.addAttribute("errorTitle", "404 - Page Not Found");
         model.addAttribute("errorDescription", "The page you are looking for does not exist.");
+        return "error";
+    }
+    @ExceptionHandler(ApiConnectionException.class)
+    public String handleToConnectApi(ApiConnectionException ex, Model model) {
+        log.error("Failed to connect to Weather API: {}", ex.getMessage(), ex);
+        model.addAttribute("errorTitle", "500 - Weather Service Error");
+        model.addAttribute("errorDescription", "Weather service is temporarily unavailable. Please try again later.");
         return "error";
     }
 }
