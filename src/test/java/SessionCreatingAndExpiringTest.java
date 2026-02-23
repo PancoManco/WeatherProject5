@@ -1,3 +1,5 @@
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,12 +10,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pancoManco.weatherViewer.dto.UserRegisterDto;
 import ru.pancoManco.weatherViewer.dto.UserSignInDto;
+import ru.pancoManco.weatherViewer.model.Session;
 import ru.pancoManco.weatherViewer.model.User;
-import ru.pancoManco.weatherViewer.scheduler.SessionCleanupScheduler;
+import ru.pancoManco.weatherViewer.repository.SessionRepository;
 import ru.pancoManco.weatherViewer.service.SessionService;
 import ru.pancoManco.weatherViewer.service.UserService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestConfiguration.class)
@@ -29,29 +36,79 @@ public class SessionCreatingAndExpiringTest {
     @Autowired
     private SessionService sessionService;
 
+    @Autowired
+    private SessionRepository sessionRepository;
 
-  //  private SessionCleanupScheduler sessionCleanupScheduler;
+    @PersistenceContext
+    private EntityManager em;
+
 
     @Test
-    @DisplayName("Проверка что создается новая сессия при авторизации пользователя")
-    public void createNewSession() {
-
+    @DisplayName("Authentication should create exactly one session for the user")
+    public void authenticate_shouldCreateSingleSessionForUser() {
         String login = "test"+Math.random();
         UserRegisterDto userRegisterDto =
                 new UserRegisterDto(login,"password1","password1");
         userService.register(userRegisterDto);
-
         UserSignInDto userSignInDto = new UserSignInDto(userRegisterDto.getUsername(),userRegisterDto.getPassword());
-
         userService.authenticate(userSignInDto);
         User user = userService.getUserByUsername(userSignInDto.getUsername());
         Long userId = user.getId();
+        em.flush();
         Long count = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM weather.sessions WHERE user_id = ?",
                 Long.class,
                 userId
         );
-        assertEquals(1L, count, "Должна быть создана ровно одна сессия для пользователя");
+        assertEquals(1L, count,  "Exactly one session should be created for the authenticated user");
+    }
+    @Test
+    @DisplayName("Session is invalid if expired")
+    public void isSessionValid_withExpiredSession_shouldReturnFalse() {
+        User user = new User();
+        user.setLogin("testuser");
+        user.setPassword("password");
+        em.persist(user);
+        Session expiredSession = new Session(UUID.randomUUID(), user, LocalDateTime.now().minusMinutes(10));
+        em.persist(expiredSession);
+        em.flush();
+        boolean valid = sessionService.isSessionValid(expiredSession.getId());
+        assertFalse(valid, "Expired session should not be valid");
     }
 
+    @Test
+    @DisplayName("Expired sessions are deleted by cleanup")
+    public void cleanupExpiredSessions_shouldRemoveExpiredAndKeepValid() {
+
+        User user = new User();
+        user.setLogin("user2");
+        user.setPassword("password");
+        em.persist(user);
+        Session expired = new Session(UUID.randomUUID(), user, LocalDateTime.now().minusHours(1));
+        Session valid = new Session(UUID.randomUUID(), user, LocalDateTime.now().plusHours(1));
+        em.persist(expired);
+        em.persist(valid);
+        em.flush();
+        sessionService.cleanupExpiredSessions();
+        em.flush();
+        Optional<Session> expiredCheck = sessionRepository.findById(expired.getId());
+        Optional<Session> validCheck = sessionRepository.findById(valid.getId());
+
+        assertFalse(expiredCheck.isPresent(), "Expired session should be deleted");
+        assertTrue(validCheck.isPresent(), "Valid session should remain");
+    }
+
+    @Test
+    @DisplayName("Expired sessions are not considered valid")
+    public void findValidSession_withExpiredSession_shouldReturnEmpty() {
+        User user = new User();
+        user.setLogin("user3");
+        user.setPassword("password");
+        em.persist(user);
+        Session session = new Session(UUID.randomUUID(), user, LocalDateTime.now().minusMinutes(5));
+        em.persist(session);
+        em.flush();
+        Optional<Session> validSession = sessionRepository.findValidSession(session.getId());
+        assertFalse(validSession.isPresent(), "Expired session should not be considered valid");
+    }
 }

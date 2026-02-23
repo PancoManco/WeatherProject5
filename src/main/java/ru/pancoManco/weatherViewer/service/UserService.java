@@ -15,38 +15,36 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final SessionService sessionService;
-    // private final PasswordEncoderUtil passwordEncoder;
     private final UserMapper userMapper;
 
-
+    @Transactional
     public void register(UserRegisterDto userRegisterDto) {
         User user = userMapper.toEntity(userRegisterDto);
         String encodedPassword = PasswordEncoderUtil.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
     }
-
+    @Transactional
     public UUID authenticate(UserSignInDto userSignInDto)  {
        Optional<User> opt = userRepository.findByUsername(userSignInDto.getUsername());
         return sessionService.createNewSession(opt.get());
     }
-
+    @Transactional(readOnly = true)
     public boolean isAlreadyExist(UserRegisterDto userRegisterDto) {
         return userRepository.findByUsername(userRegisterDto.getUsername()).isPresent();
     }
-
+    @Transactional(readOnly = true)
     public boolean isCorrectPasswordOrLogin(UserSignInDto userSignInDto) {
         return userRepository.findByUsername(userSignInDto.getUsername())
                 .map(user -> PasswordEncoderUtil.matches(userSignInDto.getPassword(), user.getPassword()))
                 .orElse(false);
     }
-
+    @Transactional(readOnly = true)
     @Cacheable(value = "usersByUsername",key = "#username", condition = "#username != null")
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);

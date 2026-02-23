@@ -52,13 +52,13 @@ public class GlobalExceptionHandler {
         log.error("IllegalArgumentException: {}", ex.getMessage());
     }
 
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public String handleNotFound(NoHandlerFoundException ex, Model model) {
-        log.warn("Page not found: {}", ex.getRequestURL());
-        model.addAttribute("errorTitle", "404 - Page Not Found");
-        model.addAttribute("errorDescription", "The page you are looking for does not exist.");
-        return "error";
-    }
+//    @ExceptionHandler(NoHandlerFoundException.class)
+//    public String handleNotFound(NoHandlerFoundException ex, Model model) {
+//        log.warn("Page not found: {}", ex.getRequestURL());
+//        model.addAttribute("errorTitle", "404 - Page Not Found");
+//        model.addAttribute("errorDescription", "The page you are looking for does not exist.");
+//        return "error";
+//    }
     @ExceptionHandler(ApiConnectionException.class)
     public String handleToConnectApi(ApiConnectionException ex, Model model) {
         log.error("Failed to connect to Weather API: {}", ex.getMessage(), ex);

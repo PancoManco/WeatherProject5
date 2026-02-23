@@ -21,10 +21,9 @@ import java.util.List;
 @Controller
 public class HomeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
     private final LocationService locationService;
 
-    @GetMapping
+    @GetMapping("/")
     public String getHomePage(Model model) {
         List<OpenWeatherCityResponseDto> locations = locationService.getAllLocationForUser();
         model.addAttribute("locationList",locations);

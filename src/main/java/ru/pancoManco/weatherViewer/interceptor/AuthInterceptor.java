@@ -27,27 +27,28 @@ public class AuthInterceptor implements HandlerInterceptor {
                              HttpServletResponse response,
                              Object handler) throws Exception {
 
-       AuthUser authUser = null;
+        AuthUser authUser = null;
         Cookie cookie = WebUtils.findCookie(request, "SESSION_ID");
         if (cookie != null) {
             String sessionId = cookie.getValue();
             Optional<Session> sessionOpt = sessionService.getSessionById(UUID.fromString(sessionId));
-
-            if (sessionOpt.isPresent()) {
-                Session currentSession = sessionOpt.get();
-                User user = currentSession.getUserId();
-                authUser = new AuthUser(user.getId(), user.getLogin());
-                UserContextHolder.set(authUser);
+            if (sessionService.isSessionValid(UUID.fromString(sessionId))) {
+                if (sessionOpt.isPresent()) {
+                    Session currentSession = sessionOpt.get();
+                    User user = currentSession.getUserId();
+                    authUser = new AuthUser(user.getId(), user.getLogin());
+                    UserContextHolder.set(authUser);
+                }
             }
         }
         String uri = request.getRequestURI();
         if (uri.startsWith("/css") || uri.startsWith("/js")||uri.startsWith("/images")) {
             return true;
         }
-       if (authUser != null && (uri.equals("/sign-in") || uri.equals("/sign-up"))) {
-           response.sendRedirect("/");
-           return false;
-       }
+        if (authUser != null && (uri.equals("/sign-in") || uri.equals("/sign-up"))) {
+            response.sendRedirect("/");
+            return false;
+        }
 
         if (authUser == null && !uri.equals("/sign-in") && !uri.equals("/sign-up")) {
             response.sendRedirect("/sign-in");

@@ -7,6 +7,7 @@ import ru.pancoManco.weatherViewer.model.Session;
 import ru.pancoManco.weatherViewer.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 @Slf4j
@@ -33,11 +34,11 @@ public class SessionRepository extends BaseRepository<Session> {
                 .executeUpdate();
         if (deleted == 0) {
             log.warn("No session found with user {} to deleted", user);
-          //  throw new NoResultException("No session found with user " + user);
         }
         log.debug("Successfully deleted {} sessions for user {}", deleted, user);
         return deleted;
     }
+
 
     public void deleteById(UUID id) {
         int deleted = em.createQuery("DELETE FROM Session s WHERE s.id = :id")
@@ -45,24 +46,10 @@ public class SessionRepository extends BaseRepository<Session> {
                 .executeUpdate();
         if (deleted == 0) {
             log.warn("No session found with UUID to delete: {}", id);
-            throw new NoResultException("No session found with UUID to delete: " + id);
         }
         log.debug("Successfully deleted session with UUID: {}", id);
     }
 
-    public Optional<User> findUserById(UUID sessionId) {
-        try {
-            User result  = em.createQuery(
-                            "SELECT s.userId FROM Session s WHERE s.id = :uuid",
-                            User.class
-                    ).setParameter("uuid", sessionId)
-                    .getSingleResult();
-            return Optional.of(result);
-        } catch (NoResultException e) {
-            log.debug("No user found with sessionId {}", sessionId);
-            return  Optional.empty();
-        }
-    }
 
     public int deleteByExpiresAtBefore(LocalDateTime now) {
         int deleted = em.createQuery("DELETE FROM Session s WHERE s.expiresAt < :now")
@@ -73,5 +60,19 @@ public class SessionRepository extends BaseRepository<Session> {
         }
         log.debug("Successfully deleted {} expired sessions", deleted);
         return deleted;
+    }
+
+    public Optional<Session> findValidSession(UUID id) {
+        List<Session> result = em.createQuery("""
+            SELECT s
+            FROM Session s
+            WHERE s.id = :id
+            AND s.expiresAt > :now
+            """, Session.class)
+                .setParameter("id", id)
+                .setParameter("now", LocalDateTime.now())
+                .getResultList();
+
+        return result.stream().findFirst();
     }
 }

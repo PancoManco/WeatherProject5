@@ -95,7 +95,7 @@ public class LocationService {
         Set<ConstraintViolation<OpenWeatherCityResponseDto>> violations = validator.validate(dto);
         if (!violations.isEmpty()) {
             for (ConstraintViolation<OpenWeatherCityResponseDto> violation : violations) {
-                log.warn("Валидация не пройдена для города {}. Поле: {}, Ошибка: {}",
+                log.warn("Geo validation failed. CityName={}, Field={}, message={}",
                         location.getName(),
                         violation.getPropertyPath(),
                         violation.getMessage());

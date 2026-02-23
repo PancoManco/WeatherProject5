@@ -20,7 +20,6 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     @Transactional
     public UUID createNewSession(User user) {
-      //  int deleted =  sessionRepository.deleteByUser(user);
         Session session = new Session(UUID.randomUUID(),user, LocalDateTime.now().plusHours(1));
         sessionRepository.save(session);
         return session.getId();
@@ -30,10 +29,16 @@ public class SessionService {
         return sessionRepository.findById(sessionId);
     }
 
-
     @Transactional
     public void invalidateSession(UUID sessionId) {
        sessionRepository.deleteById(sessionId);
     }
 
+    public boolean isSessionValid(UUID sessionId) {
+        return sessionRepository.findValidSession(sessionId).isPresent();
+    }
+    @Transactional
+    public void cleanupExpiredSessions() {
+        sessionRepository.deleteByExpiresAtBefore(LocalDateTime.now());
+    }
 }

@@ -41,6 +41,7 @@ public class SignInController {
         }
         UUID sessionId = userService.authenticate(userSignInDto);
         WebUtils.setCookie("SESSION_ID",sessionId.toString(), 60 * 60,resp);
+
         return "redirect:/";
     }
 }

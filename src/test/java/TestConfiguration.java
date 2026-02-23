@@ -38,7 +38,9 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@ComponentScan(basePackages = {"ru.pancoManco.weatherViewer.service","ru.pancoManco.weatherViewer.mapper"})
+@ComponentScan(basePackages = {"ru.pancoManco.weatherViewer.service",
+        "ru.pancoManco.weatherViewer.mapper",
+        "ru.pancoManco.weatherViewer.repository"})
 @EnableJpaRepositories("ru.pancoManco.weatherViewer.repository")
 @EnableTransactionManagement
 public class TestConfiguration {
@@ -101,44 +103,6 @@ public class TestConfiguration {
         return validatorFactory.getValidator();
 
     }
-
-    @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
-        return new PersistenceExceptionTranslationPostProcessor();
-    }
-
-    @Bean
-    public LocationRepository locationRepository() {
-        return new LocationRepository() {{
-            this.em = em;
-        }};
-    }
-
-    @Bean
-    public LocationService locationService(LocationRepository locationRepository,
-                                           OpenWeatherService openWeatherService,
-                                           UserService userService,
-                                           jakarta.validation.Validator validator) {
-        return new LocationService(locationRepository, openWeatherService, userService, validator);
-    }
-
-    @Bean
-    public SessionRepository sessionRepository() {
-        return new SessionRepository() {
-            {
-                this.em = em;
-            }
-        };
-    }
-
-    @Bean
-    public UserRepository userRepository() {
-        return new UserRepository() {
-            {
-                this.em = em;
-            }
-        };
-    }
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
@@ -149,11 +113,8 @@ public class TestConfiguration {
         return new ObjectMapper();
     }
 
-
     @Bean
-    public OpenWeatherService openWeatherService(RestTemplate restTemplate,
-                                                 Validator validator,
-                                                 ObjectMapper objectMapper) {
-        return new OpenWeatherService(restTemplate, objectMapper, validator);
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+        return new PersistenceExceptionTranslationPostProcessor();
     }
 }
