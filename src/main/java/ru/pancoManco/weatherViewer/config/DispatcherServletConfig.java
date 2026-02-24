@@ -1,6 +1,11 @@
 package ru.pancoManco.weatherViewer.config;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.SessionTrackingMode;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+import java.util.EnumSet;
 
 public class DispatcherServletConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
@@ -14,5 +19,13 @@ public class DispatcherServletConfig extends AbstractAnnotationConfigDispatcherS
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        servletContext.setSessionTrackingModes(
+                EnumSet.of(SessionTrackingMode.COOKIE)
+        );
+        super.onStartup(servletContext);
     }
 }

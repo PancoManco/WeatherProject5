@@ -21,18 +21,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
-import ru.pancoManco.weatherViewer.repository.LocationRepository;
-import ru.pancoManco.weatherViewer.repository.SessionRepository;
-import ru.pancoManco.weatherViewer.repository.UserRepository;
-import ru.pancoManco.weatherViewer.service.LocationService;
-import ru.pancoManco.weatherViewer.service.OpenWeatherService;
-import ru.pancoManco.weatherViewer.service.UserService;
 
 import javax.sql.DataSource;
 import java.util.Properties;

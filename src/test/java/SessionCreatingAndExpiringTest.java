@@ -42,11 +42,10 @@ public class SessionCreatingAndExpiringTest {
     @PersistenceContext
     private EntityManager em;
 
-
     @Test
     @DisplayName("Authentication should create exactly one session for the user")
     public void authenticate_shouldCreateSingleSessionForUser() {
-        String login = "test"+Math.random();
+        String login = "test1";
         UserRegisterDto userRegisterDto =
                 new UserRegisterDto(login,"password1","password1");
         userService.register(userRegisterDto);
@@ -66,8 +65,8 @@ public class SessionCreatingAndExpiringTest {
     @DisplayName("Session is invalid if expired")
     public void isSessionValid_withExpiredSession_shouldReturnFalse() {
         User user = new User();
-        user.setLogin("testuser");
-        user.setPassword("password");
+        user.setLogin("test2");
+        user.setPassword("password2");
         em.persist(user);
         Session expiredSession = new Session(UUID.randomUUID(), user, LocalDateTime.now().minusMinutes(10));
         em.persist(expiredSession);
@@ -81,8 +80,8 @@ public class SessionCreatingAndExpiringTest {
     public void cleanupExpiredSessions_shouldRemoveExpiredAndKeepValid() {
 
         User user = new User();
-        user.setLogin("user2");
-        user.setPassword("password");
+        user.setLogin("user3");
+        user.setPassword("password3");
         em.persist(user);
         Session expired = new Session(UUID.randomUUID(), user, LocalDateTime.now().minusHours(1));
         Session valid = new Session(UUID.randomUUID(), user, LocalDateTime.now().plusHours(1));
@@ -102,8 +101,8 @@ public class SessionCreatingAndExpiringTest {
     @DisplayName("Expired sessions are not considered valid")
     public void findValidSession_withExpiredSession_shouldReturnEmpty() {
         User user = new User();
-        user.setLogin("user3");
-        user.setPassword("password");
+        user.setLogin("user4");
+        user.setPassword("password4");
         em.persist(user);
         Session session = new Session(UUID.randomUUID(), user, LocalDateTime.now().minusMinutes(5));
         em.persist(session);

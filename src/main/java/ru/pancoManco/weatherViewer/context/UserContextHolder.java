@@ -6,9 +6,7 @@ import ru.pancoManco.weatherViewer.model.AuthUser;
 public class UserContextHolder {
 
     private final static ThreadLocal<AuthUser> context = new ThreadLocal<>();
-
     private UserContextHolder() {}
-
     public static void set(AuthUser authUser) {
         context.set(authUser);
     }

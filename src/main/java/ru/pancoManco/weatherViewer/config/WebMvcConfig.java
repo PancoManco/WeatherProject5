@@ -44,5 +44,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/js/**")
                 .addResourceLocations("/js/");
     }
-
 }

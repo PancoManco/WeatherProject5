@@ -81,4 +81,4 @@ Open your browser and navigate to:
 http://localhost:8080/your-project/
 ```
 Replace your-project with the name of your .war file (without the .war extension).
-
+6. **Don't forget to change login and password from your PostgreSql database and api-key for OpenWeather in database.properties.**
